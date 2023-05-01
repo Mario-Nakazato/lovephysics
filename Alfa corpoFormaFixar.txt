@@ -1,0 +1,29 @@
+obj = {}
+  function obj.novo(modo, mundo, cx, cy, tipo, ...)--cor(rgba)$, modo, mundo, cx, cy, tipo, [Raio] [c, l] [{Pontos} centralizar x y], nome$, nZ$
+    local arg = {...}
+    classe = {}
+    classe.modo = modo
+    classe.corpo = lfisica.newBody(mundo, cx, cy, tipo)
+    if #arg == 1 then
+      classe.forma = lfisica.newCircleShape(...)
+      function classe:desenhar()
+        lgrafico.circle(classe.modo, classe.corpo:getX(), classe.corpo:getY(), classe.forma:getRadius())
+        lgrafico.setColor(corByte(255, 255, 255))
+        lgrafico.setLineStyle("rough")
+        lgrafico.line(classe.corpo:getX(), classe.corpo:getY(), classe.corpo:getX() +classe.forma:getRadius()*math.cos(classe.corpo:getAngle()), classe.corpo:getY() +classe.forma:getRadius()*math.sin(classe.corpo:getAngle()))
+      end
+    elseif #arg == 2 then
+      classe.forma = lfisica.newRectangleShape(...)
+      function classe:desenhar()
+        lgrafico.polygon(classe.modo, classe.corpo:getWorldPoints(classe.forma:getPoints()))
+      end
+    else
+      classe.forma = lfisica.newPolygonShape(arg)
+      function classe:desenhar()
+        lgrafico.polygon(classe.modo, classe.corpo:getWorldPoints(classe.forma:getPoints()))
+      end
+    end
+    classe.fixar = lfisica.newFixture(classe.corpo, classe.forma)
+    
+    return classe
+  end
